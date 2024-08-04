@@ -6,7 +6,7 @@ class Tree:
         self.blobs = []
 
 world = []
-for i in range(100):
+for i in range(200):
     world.append(Tree())
 
 def world_reset():
@@ -86,7 +86,7 @@ for i in range (20):
     print(random.choice([1, 2, 3, 4, 5]), end=' ')
 '''
     
-for i in range(70):
+for i in range(200):
     for blob in blobs:
         blob.go_to_tree()
 
@@ -141,9 +141,10 @@ for i in range(70):
 
 ### START CREATING GRAPH ###
 
-plt.stackplot([i for i in range(len(solo_blobs_amount))], solo_blobs_amount, team_blobs_amount)
+plt.stackplot([i for i in range(len(solo_blobs_amount))], solo_blobs_amount, team_blobs_amount, colors=[(1, 0, 0), (0, 0, 1)])
 plt.legend(['Solo Blobs', 'Team Blobs'])
 plt.title('Frequency of Solo & Team Blobs')
 plt.xlabel('Day')
 plt.ylabel('# of Solo Blobs')
 plt.show()
+
