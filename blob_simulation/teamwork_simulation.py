@@ -1,17 +1,23 @@
 from matplotlib import pyplot as plt
 import random
+import time
+
+start_time = time.perf_counter()
 
 class Tree:
     def __init__(self):
         self.blobs = []
 
+tree_amount = 500
 world = []
-for i in range(200):
+for i in range(tree_amount):
     world.append(Tree())
+world_index = {i for i in range(tree_amount)}
 
 def world_reset():
-    for tree in world:
-        tree.blobs = []
+    for tree_index in world_index:
+        world[tree_index].blobs = []
+    #print('World Reset')
 
 blobs = []
 
@@ -22,22 +28,20 @@ class Blob:
         
     def __str__(self):
         return self.blob_type.capitalize() + ' blob'
-    
-    def change_type(self, blob_type):
-        self.blob_type = blob_type
 
     def go_to_tree(self):
-        available_trees = world[:]
         while True:
-            if len(available_trees) > 0:
-                tree_attempt = random.choice(available_trees)
+            if len(available_tree_index) > 0:
+                tree_index = random.choice(list(available_tree_index))
                 #print(tree_attempt)
-                if (len(tree_attempt.blobs) < 2):
-                    self.tree = tree_attempt
-                    tree_attempt.blobs.append(self)
-                    return tree_attempt
+                if (len(world[tree_index].blobs) < 2):
+                    self.tree = world[tree_index]
+                    world[tree_index].blobs.append(self)
+                    if world[tree_index].blobs == 2:
+                        available_tree_index.remove(tree_index)
+                    return world[tree_index]
                 else:
-                    available_trees.remove(tree_attempt)
+                    available_tree_index.remove(tree_index)
             else:
                 blobs.remove(self)
                 return 'Blob removed'
@@ -53,11 +57,12 @@ class Blob:
             new_blobs.append(Blob(self.blob_type))
         #print(len(new_blobs))
         #print(len(blobs))
-        blobs.remove(self)
         blobs.extend(new_blobs)
+        blobs.remove(self)
+        #print('R', end=' ')
 
-team_start_amt = 5
-solo_start_amt = 5
+team_start_amt = 1
+solo_start_amt = 1
 team_blobs_amount = [team_start_amt]
 solo_blobs_amount = [solo_start_amt]
 
@@ -81,12 +86,11 @@ v Self  Opponent =======================>
 -----------------------------------------
 '''
 
-'''
-for i in range (20):
-    print(random.choice([1, 2, 3, 4, 5]), end=' ')
-'''
-    
-for i in range(200):
+total_days = 100
+
+for i in range(total_days):
+    available_tree_index = set(list(world_index)[:])
+
     for blob in blobs:
         blob.go_to_tree()
 
@@ -99,21 +103,32 @@ for i in range(200):
                 if blob2.blob_type == 'solo':
                     blob1.reproduce(0.5)
                     blob2.reproduce(0.5)
+                    #print('SS', end=' ')
                 elif blob2.blob_type == 'team':
                     blob1.reproduce(1.5)
                     blob2.reproduce(0.5)
+                    #print('ST', end=' ')
             
             if blob1.blob_type == 'team':
                 if blob2.blob_type == 'solo':
                     blob1.reproduce(0.5)
                     blob2.reproduce(1.5)
+                    #print('TS', end=' ')
                 if blob2.blob_type == 'team':
                     blob1.reproduce(1.5)
                     blob2.reproduce(1.5)
+                    #print('TT', end=' ')
 
         elif len(tree.blobs) == 1:
             blob1 = tree.blobs[0]
             blob1.reproduce(2)
+            #print('OT', end=' ')
+        
+        #else:
+            #print('NB', end=' ')
+        
+    #print()
+
 
     '''
     for tree in world:
@@ -141,10 +156,13 @@ for i in range(200):
 
 ### START CREATING GRAPH ###
 
-plt.stackplot([i for i in range(len(solo_blobs_amount))], solo_blobs_amount, team_blobs_amount, colors=[(1, 0, 0), (0, 0, 1)])
+end_time = time.perf_counter()
+print('Total time: {} s'.format(end_time - start_time))
+print('Trees: {}, Days: {}'.format(tree_amount, total_days))
+
+plt.stackplot([i for i in range(len(solo_blobs_amount))], solo_blobs_amount, team_blobs_amount, colors=[(1, 0.4, 0.4), (0.4, 0.5, 1)])
 plt.legend(['Solo Blobs', 'Team Blobs'])
 plt.title('Frequency of Solo & Team Blobs')
 plt.xlabel('Day')
 plt.ylabel('# of Solo Blobs')
 plt.show()
-
