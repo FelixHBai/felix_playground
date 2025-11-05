@@ -136,6 +136,7 @@ def run_blob_teamwork_sim(tree_amount, total_days, team_start_amt=1, solo_start_
     ### START CREATING GRAPH ###
 
     end_time = time.perf_counter()
+    #return
     print('Total time: {} s'.format(end_time - start_time))
     print('Trees: {}, Days: {}'.format(tree_amount, total_days))
 
@@ -147,4 +148,10 @@ def run_blob_teamwork_sim(tree_amount, total_days, team_start_amt=1, solo_start_
     plt.show()
 
 if __name__ == '__main__':
-    run_blob_teamwork_sim(tree_amount=500, total_days=100)
+    import cProfile
+    import pstats
+    cProfile.run('run_blob_teamwork_sim(tree_amount=500, total_days=100)', 'teamwork_evolve_cprofile.temp')
+    stats = pstats.Stats('teamwork_evolve_cprofile.temp')
+    stats.sort_stats('cumulative')
+    stats.print_stats(200)
+    #run_blob_teamwork_sim(tree_amount=500, total_days=100)
