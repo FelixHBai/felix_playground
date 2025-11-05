@@ -9,15 +9,15 @@ sun_x = 0.0 # meters
 sun_y = 0.0 # meters
 mass_sun = 1.989e+30 # kg
 time_step = 86400 * 10 # seconds
-scale = 1e+10
+scale = 1e+9
 
 def calculate_gravity(distance, g=6.67e-11):
     gravity = g * mass_earth * mass_sun / distance**2
     return gravity
 
 def split_force(force, distance, xpos=xpos, ypos=ypos):
-    force_x = xpos * force / distance
-    force_y = ypos * force / distance
+    force_x = -xpos * force / distance
+    force_y = -ypos * force / distance
     return (force_x, force_y)
 
 def calc_velocity(force, time):
@@ -34,7 +34,6 @@ if __name__ == '__main__':
     t.dot(6)
     earth = t.clone()
     earth.color('blue')
-    earth.pendown()
 
     while True:
         distance = math.sqrt((sun_x - xpos)**2 + (sun_y - ypos)**2)
@@ -49,3 +48,4 @@ if __name__ == '__main__':
         y_scaled = ypos/scale
         #print('{:.3e}'.format(y_scaled))
         earth.setpos(xpos/scale, ypos/scale)
+        earth.pendown()
