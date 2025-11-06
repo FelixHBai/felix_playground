@@ -1,14 +1,14 @@
-import math, turtle
+import math, time, turtle
 
 xpos = 1.496e+11 # meters
 ypos = 0.0 # meters
 vel_x = 0.0 # m/s
-vel_y = 29784 # m/s
+vel_y = 29784 * 1.2 # m/s
 mass_earth = 5.972e+24 # kg
 sun_x = 0.0 # meters
 sun_y = 0.0 # meters
 mass_sun = 1.989e+30 # kg
-time_step = 86400 * 10 # seconds
+time_step = 86400 * 1 # seconds
 scale = 1e+9
 
 def calculate_gravity(distance, g=6.67e-11):
@@ -31,11 +31,15 @@ if __name__ == '__main__':
     s = turtle.getscreen()
     t = turtle.Turtle()
     t.penup()
+    t.hideturtle()
     t.color('orange')
     t.goto(sun_x, sun_y)
-    t.dot(6)
+    t.dot(15)
     earth = t.clone()
     earth.color('blue')
+    earth.showturtle()
+    earth.shape('circle')
+    earth.shapesize(0.4)
 
     for i in range(int(1e+9)):
         #print('Iteration {}, '.format(i, xpos), end='')
@@ -55,3 +59,4 @@ if __name__ == '__main__':
         y_scaled = ypos/scale
         earth.setpos(xpos/scale, ypos/scale)
         earth.pendown()
+        #time.sleep(0.1)
